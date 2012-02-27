@@ -48,18 +48,18 @@ for passage to Solr."
 (defn -| [coll] (merge-queries coll (:or connectors)))
 (defn -& [coll] (merge-queries coll (:and connectors)))
     
-(defmulti filter
+(defmulti qfilter
   (fn [& args] (= clojure.lang.PersistentVector (type (first args)))))
 
-(defmethod filter true [& args]
+(defmethod qfilter true [& args]
   (let [q (first args)
         m (rest args)]
     (cz/append-child q (list (apply hash-map m)))))
 
-(defmethod filter false [& args]
+(defmethod qfilter false [& args]
   (cz/seq-zip (list (apply hash-map args))))
 
-(defn do-search [url q params]
+(defn -?> [url q params]
   (cs/with-connection (cs/connect url)
     (cs/search q params)))
 
