@@ -8,7 +8,7 @@ A robust Solr query API for Clojure.
 Getting Started
 ===============
 
-Add ``[icarus "1.0.0a"]`` to project.clj.
+Add ``[icarus "0.1a"]`` to project.clj.
 
 
 Example queries
