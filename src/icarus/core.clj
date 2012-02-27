@@ -1,39 +1,17 @@
 (ns icarus.core
   (:require [clojure-solr :as cs]
             [clojure.zip :as cz]
-            [clojure.string]))
-
-(def default-op (:or connectors))
+            [clojure.string]
+            [clojure.walk]))
 
 (def connectors {:or " OR "
                  :and " AND "
                  :not " NOT "})
 
-(defn merge-queries [coll sep]
-  "Merge a collection of query nodes with a logical connector, suitable
-for passage to Solr."
-  (paren-wrap (clojure.string/join sep (map build-querystring coll))))
-
-(defn -| [coll] (merge-queries coll (:or connectors)))
-(defn -& [coll] (merge-queries coll (:and connectors)))
-    
-(defmulti filter
-  (fn [& args] (= clojure.lang.PersistentVector (type (first args)))))
-
-(defmethod filter true [& args]
-  (let [q (first args)
-        m (rest args)]
-    (cz/append-child q (list (apply hash-map m)))))
-
-(defmethod filter false [& args]
-  (cz/seq-zip (list (apply hash-map args))))
+(def default-op (:or connectors))
 
 (defn paren-wrap [s]
   (str "(" s ")"))
-
-(defn do-search [url q params]
-  (cs/with-connection (cs/connect url)
-    (cs/search q params)))
 
 (defn parse-vals [i]
   (str (name (first i)) ":"
@@ -61,4 +39,29 @@ for passage to Solr."
     (if (> 1 (count k))
       (paren-wrap s)
       s)))
+
+(defn merge-queries [coll sep]
+  "Merge a collection of query nodes with a logical connector, suitable
+for passage to Solr."
+  (paren-wrap (clojure.string/join sep (map build-querystring coll))))
+
+(defn -| [coll] (merge-queries coll (:or connectors)))
+(defn -& [coll] (merge-queries coll (:and connectors)))
+    
+(defmulti filter
+  (fn [& args] (= clojure.lang.PersistentVector (type (first args)))))
+
+(defmethod filter true [& args]
+  (let [q (first args)
+        m (rest args)]
+    (cz/append-child q (list (apply hash-map m)))))
+
+(defmethod filter false [& args]
+  (cz/seq-zip (list (apply hash-map args))))
+
+(defn do-search [url q params]
+  (cs/with-connection (cs/connect url)
+    (cs/search q params)))
+
+
 
