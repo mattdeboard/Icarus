@@ -1,4 +1,4 @@
-(defproject icarus "1.0.0a"
+(defproject icarus "0.1a"
   :description "A robust Solr interface."
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [org.clojars.mattdeboard/clojure-solr "0.4.0-SNAPSHOT"]]
