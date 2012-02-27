@@ -8,8 +8,7 @@ A robust Solr query API for Clojure.
 Example queries
 ===============
 
-.. sourcecode::
-
+::
   (do-search "http://127.0.0.1:8983" (build-queryset (filter :city ["Indianapolis"
                                                                     "Muncie"]))
              {:rows 10 :fl "city,population,state"})
@@ -18,8 +17,7 @@ Example queries
 Composable queries
 ==================
 
-.. sourcecode::
-
+::
   (def query1 (filter :city "Springfield"))
   (def query2 (filter :state "Florida"))
 
